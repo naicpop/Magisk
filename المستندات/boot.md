@@ -57,7 +57,7 @@ When Google released the first generation Pixel, it also introduced [A/B (Seamle
 
 Let's go back in time when Google is first designing A/B. If using SAR (only Boot Method B exists at that time), the kernel doesn't need `initramfs` to boot Android (because rootdir is in `system`). This mean we can be smart and just stuff the recovery ramdisk (containing the minimalist Linux environment) into `boot`, remove `recovery`, and let the kernel pick whichever rootdir to use (ramdisk or `system`) based on information from the bootloader.
 
-As time passed from Android 7.1 to Android 10, Google introduced [Dynamic Partitions](https://source.android.com/devices/tech/ota/dynamic_partitions/implement). This is bad news for SAR, because the Linux kernel cannot directly understand this new partition format, thus unable to directly mount `system` as rootdir. This is when they came up with Boot Method C: always boot into `initramfs`, and let userspace handle the rest of booting. This includes deciding whether to boot into Android or recovery, or as they officially call: `USES_RECOVERY_AS_BOOT`.
+As time passed from Android 7.1 to Android 11, Google introduced [Dynamic Partitions](https://source.android.com/devices/tech/ota/dynamic_partitions/implement). This is bad news for SAR, because the Linux kernel cannot directly understand this new partition format, thus unable to directly mount `system` as rootdir. This is when they came up with Boot Method C: always boot into `initramfs`, and let userspace handle the rest of booting. This includes deciding whether to boot into Android or recovery, or as they officially call: `USES_RECOVERY_AS_BOOT`.
 
 Some modern devices using A/B with 2SI also comes with `recovery_a/_b` partitions. This is officially supported with Google's standard. These devices will then only use the boot ramdisk to boot into Android as recovery is stored on a separate partition.
 
@@ -67,7 +67,7 @@ With all the knowledge above, now we can categorize all Android devices into the
 
 Type | Boot Method | Partition | 2SI | Ramdisk in `boot`
 :---: | :---: | :---: | :---: | :---:
-**I** | A | A-only | No | `boot` ramdisk
+**I** | A | A-only | Any | `boot` ramdisk
 **II** | B | A/B | Any | `recovery` ramdisk
 **III** | B | A-only | Any | ***N/A***
 **IV** | C | Any | Yes | Hybrid ramdisk
